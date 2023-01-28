@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native'
 import React, { useState } from 'react'
 import {
   FlatList,
@@ -8,12 +9,21 @@ import {
 } from 'react-native'
 import AddNote from '../components/AddNote'
 import colors from '../constans/colors'
+import { useNotes } from '../contexts/NotesContext'
+import { NotesTypeReducer } from '../reducers/noteReducer'
 
-const NotesScreen = ({ notes, onNoteSelected, onNewNote }) => {
+const NotesScreen = () => {
+  const { notes, dispatch } = useNotes()
+  const navigation = useNavigation()
   const [addNoteVisible, setAddNoteVisible] = useState(false)
 
   const onSelectHandler = (note) => {
-    onNoteSelected(note)
+    dispatch({
+      type: NotesTypeReducer.SELECT_NOTE,
+      payload: note.id,
+    })
+
+    navigation.navigate('NoteDetailScreen')
   }
 
   const onFloatingButtonPressHandler = () => {
@@ -26,7 +36,10 @@ const NotesScreen = ({ notes, onNoteSelected, onNewNote }) => {
 
   const onNewNoteHandler = (newNote) => {
     setAddNoteVisible(false)
-    onNewNote(newNote)
+    dispatch({
+      type: NotesTypeReducer.ADD_NOTE,
+      payload: newNote,
+    })
   }
 
   const renderItem = (note) => (
@@ -91,6 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: 'white',
   },
   gridContainer: {
     flex: 1,

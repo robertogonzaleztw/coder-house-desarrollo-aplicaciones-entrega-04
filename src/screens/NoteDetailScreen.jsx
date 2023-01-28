@@ -1,8 +1,17 @@
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import colors from '../constans/colors'
+import { useNotes } from '../contexts/NotesContext'
 
-const NoteDetailScreen = ({ note, onBack }) => {
+const NoteDetailScreen = () => {
+  const { noteSelected: note } = useNotes()
+  const navigation = useNavigation()
+
+  const goBackHandler = () => {
+    navigation.goBack()
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.noteContainer}>
@@ -11,7 +20,7 @@ const NoteDetailScreen = ({ note, onBack }) => {
           <Text style={styles.body}>{note.body}</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={onBack} style={styles.button}>
+      <TouchableOpacity onPress={goBackHandler} style={styles.button}>
         <Text style={styles.buttonText}>Go back</Text>
       </TouchableOpacity>
     </View>
